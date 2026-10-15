@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Cinchronologie Font Studio</title>
 
   <style>
     @font-face {
       font-family: "MyFont";
-      src: url("myfont.ttf") format("truetype");
+      src: url("./myfont.ttf") format("truetype");
       font-display: swap;
     }
 
@@ -24,9 +23,7 @@
       --border: #ffacd4;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -42,10 +39,7 @@
       margin: 20px auto;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 36px;
-    }
+    header { text-align: center; margin-bottom: 36px; }
 
     h1 {
       margin: 0 0 14px;
@@ -55,10 +49,7 @@
       line-height: 1.25;
     }
 
-    .flower {
-      color: var(--pink);
-      font-size: 0.9em;
-    }
+    .flower { color: var(--pink); font-size: 0.9em; }
 
     .intro {
       margin: 0;
@@ -134,10 +125,7 @@
       font-weight: 700;
     }
 
-    #sizeValue {
-      color: var(--indigo);
-      font-variant-numeric: tabular-nums;
-    }
+    #sizeValue { color: var(--indigo); font-variant-numeric: tabular-nums; }
 
     input[type="range"] {
       display: block;
@@ -188,6 +176,18 @@
       margin-top: 12px;
       color: var(--indigo);
       font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.7;
     }
 
     footer {
@@ -198,22 +198,13 @@
       letter-spacing: 0.3px;
     }
 
-    footer span {
-      color: var(--pink);
-    }
+    footer span { color: var(--pink); }
 
     @media (max-width: 480px) {
-      body {
-        padding: 28px 16px 20px;
-      }
-
-      main {
-        margin-top: 18px;
-      }
-
-      .preview-card {
-        padding: 18px;
-      }
+      body { padding: 28px 16px 20px; }
+      main { margin-top: 18px; }
+      .preview-card { padding: 18px; }
+      button { flex: 1 1 auto; }
     }
   </style>
 </head>
@@ -225,19 +216,11 @@
         Cinchronologie Font Studio
         <span class="flower" aria-hidden="true">✿</span>
       </h1>
-
-      <p class="intro">
-        A little world of letters, made by me.
-      </p>
+      <p class="intro">A little world of letters, made by me.</p>
     </header>
 
     <label class="section-label" for="textInput">Your text</label>
-
-    <textarea
-      id="textInput"
-      placeholder="Type something lovely..."
-      spellcheck="false"
-    >cinchronologie</textarea>
+    <textarea id="textInput" placeholder="Type something lovely..." spellcheck="false">cinchronologie</textarea>
 
     <section class="preview-card" aria-label="Font preview">
       <div class="preview-heading">Font preview <span class="flower">✿</span></div>
@@ -248,15 +231,21 @@
       <label for="size">Font size</label>
       <span><span id="sizeValue">36</span> px</span>
     </div>
-
     <input id="size" type="range" min="12" max="100" value="36">
 
     <div class="actions">
+      <button id="downloadButton" type="button">Download PNG</button>
       <button id="copyButton" type="button">Copy plain text</button>
       <button id="selectButton" class="secondary" type="button">Select text</button>
     </div>
 
     <p id="message" aria-live="polite"></p>
+
+    <div class="note">
+      <strong>Note:</strong> Download PNG keeps the look of your Cinchronologie font.
+      Copy plain text copies ordinary characters, so Instagram and TikTok will not
+      automatically use this custom font in their name fields.
+    </div>
 
     <footer>Made with care &amp; flowers <span>✿</span></footer>
   </main>
@@ -268,6 +257,7 @@
     const sizeValue = document.getElementById("sizeValue");
     const copyButton = document.getElementById("copyButton");
     const selectButton = document.getElementById("selectButton");
+    const downloadButton = document.getElementById("downloadButton");
     const message = document.getElementById("message");
 
     function updatePreview() {
@@ -285,18 +275,75 @@
     copyButton.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(textInput.value);
-        message.textContent = "Text copied successfully ✿";
+        message.textContent = "Plain text copied. Custom font styling is not included ✿";
       } catch {
         textInput.focus();
         textInput.select();
-        message.textContent = "Text selected. Press Ctrl+C to copy.";
+        message.textContent = "Text selected. Press Ctrl+C to copy plain text.";
       }
     });
 
     selectButton.addEventListener("click", () => {
       textInput.focus();
       textInput.select();
-      message.textContent = "Text selected. Press Ctrl+C to copy.";
+      message.textContent = "Text selected. Press Ctrl+C to copy plain text.";
+    });
+
+    downloadButton.addEventListener("click", async () => {
+      const text = textInput.value || " ";
+      const fontSize = Number(size.value);
+      const padding = Math.max(24, Math.round(fontSize * 0.6));
+
+      try {
+        await document.fonts.load(`${fontSize}px MyFont`);
+        await document.fonts.ready;
+
+        const measureCanvas = document.createElement("canvas");
+        const measureContext = measureCanvas.getContext("2d");
+        measureContext.font = `${fontSize}px MyFont`;
+
+        const lines = text.split("\n");
+        const lineHeight = fontSize * 1.6;
+        const maxWidth = Math.max(
+          1,
+          ...lines.map(line => measureContext.measureText(line || " ").width)
+        );
+
+        const canvas = document.createElement("canvas");
+        const scale = Math.max(2, window.devicePixelRatio || 1);
+        canvas.width = Math.ceil((maxWidth + padding * 2) * scale);
+        canvas.height = Math.ceil((lines.length * lineHeight + padding * 2) * scale);
+
+        const ctx = canvas.getContext("2d");
+        ctx.scale(scale, scale);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = `${fontSize}px MyFont`;
+        ctx.fillStyle = "#4a5399";
+        ctx.textBaseline = "top";
+
+        lines.forEach((line, index) => {
+          ctx.fillText(line, padding, padding + index * lineHeight);
+        });
+
+        canvas.toBlob(blob => {
+          if (!blob) {
+            message.textContent = "Could not create PNG. Please try again.";
+            return;
+          }
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "cinchronologie-text.png";
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+          message.textContent = "PNG downloaded with a transparent background ✿";
+        }, "image/png");
+      } catch (error) {
+        message.textContent = "The custom font could not load. Check that myfont.ttf is in the repository root.";
+      }
     });
   </script>
 </body>
