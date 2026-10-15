@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cinchronologie Font Studio</title>
+
+  <style>
+    @font-face {
+      font-family: "MyFont";
+      src: url("fonts/myfont.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      --indigo: #4a5399;
+      --yellow: #f8d13e;
+      --pink: #ffacd4;
+      --background: #fff9fc;
+      --white: #ffffff;
+      --text: #4a5399;
+      --muted: #777ba5;
+      --border: #ffacd4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 42px 20px 24px;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      width: 100%;
+      max-width: 680px;
+      margin: 20px auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(27px, 5vw, 38px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.25;
+    }
+
+    .flower {
+      color: var(--pink);
+      font-size: 0.9em;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      line-height: 1.7;
+    }
+
+    .section-label {
+      display: block;
+      margin: 22px 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 120px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      outline: none;
+      background: var(--white);
+      color: var(--text);
+      font: 16px/1.6 Arial, sans-serif;
+      resize: vertical;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(74, 83, 153, 0.10);
+    }
+
+    .preview-card {
+      margin-top: 22px;
+      padding: 24px;
+      min-height: 165px;
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--yellow);
+      border-radius: 15px;
+      background: var(--white);
+    }
+
+    .preview-heading {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    #output {
+      font-family: "MyFont", sans-serif;
+      font-size: 36px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      color: var(--indigo);
+      min-height: 58px;
+    }
+
+    .size-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 22px 0 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    #sizeValue {
+      color: var(--indigo);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      display: block;
+      width: 100%;
+      margin: 0;
+      accent-color: var(--indigo);
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    button {
+      padding: 12px 19px;
+      border: 1px solid var(--indigo);
+      border-radius: 10px;
+      background: var(--indigo);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    button:hover {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      color: var(--indigo);
+    }
+
+    button.secondary {
+      background: var(--pink);
+      border-color: var(--pink);
+      color: var(--indigo);
+    }
+
+    button.secondary:hover {
+      background: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    #message {
+      min-height: 18px;
+      margin-top: 12px;
+      color: var(--indigo);
+      font-size: 12px;
+    }
+
+    footer {
+      margin-top: 42px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    footer span {
+      color: var(--pink);
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 28px 16px 20px;
+      }
+
+      main {
+        margin-top: 18px;
+      }
+
+      .preview-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>
+        Cinchronologie Font Studio
+        <span class="flower" aria-hidden="true">✿</span>
+      </h1>
+
+      <p class="intro">
+        A little world of letters, made by me.
+      </p>
+    </header>
+
+    <label class="section-label" for="textInput">Your text</label>
+
+    <textarea
+      id="textInput"
+      placeholder="Type something lovely..."
+      spellcheck="false"
+    >cinchronologie</textarea>
+
+    <section class="preview-card" aria-label="Font preview">
+      <div class="preview-heading">Font preview <span class="flower">✿</span></div>
+      <div id="output">cinchronologie</div>
+    </section>
+
+    <div class="size-heading">
+      <label for="size">Font size</label>
+      <span><span id="sizeValue">36</span> px</span>
+    </div>
+
+    <input id="size" type="range" min="12" max="100" value="36">
+
+    <div class="actions">
+      <button id="copyButton" type="button">Copy plain text</button>
+      <button id="selectButton" class="secondary" type="button">Select text</button>
+    </div>
+
+    <p id="message" aria-live="polite"></p>
+
+    <footer>Made with care &amp; flowers <span>✿</span></footer>
+  </main>
+
+  <script>
+    const textInput = document.getElementById("textInput");
+    const output = document.getElementById("output");
+    const size = document.getElementById("size");
+    const sizeValue = document.getElementById("sizeValue");
+    const copyButton = document.getElementById("copyButton");
+    const selectButton = document.getElementById("selectButton");
+    const message = document.getElementById("message");
+
+    function updatePreview() {
+      output.textContent = textInput.value;
+      message.textContent = "";
+    }
+
+    textInput.addEventListener("input", updatePreview);
+
+    size.addEventListener("input", () => {
+      output.style.fontSize = size.value + "px";
+      sizeValue.textContent = size.value;
+    });
+
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(textInput.value);
+        message.textContent = "Text copied successfully ✿";
+      } catch {
+        textInput.focus();
+        textInput.select();
+        message.textContent = "Text selected. Press Ctrl+C to copy.";
+      }
+    });
+
+    selectButton.addEventListener("click", () => {
+      textInput.focus();
+      textInput.select();
+      message.textContent = "Text selected. Press Ctrl+C to copy.";
+    });
+  </script>
+</body>
+</html>
